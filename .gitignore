@@ -1,4 +1,4 @@
 env/*
 dotcarto.conf
-data/temp/ninth_decimal_*
+data/ninth_decimal_*
 *.pyc
