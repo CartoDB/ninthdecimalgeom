@@ -6,3 +6,4 @@ gunicorn==19.6.0
 honcho==0.7.1
 pandas
 -e git+git://github.com/CartoDB/cartodb-python.git#egg=cartodb
+requests_oauthlib

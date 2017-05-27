@@ -1,4 +1,4 @@
 env/*
 dotcarto.conf
-*.csv
+data/temp/*
 *.pyc
