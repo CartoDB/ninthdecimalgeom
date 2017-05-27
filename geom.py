@@ -44,7 +44,7 @@ def cleanNinthDecimal(inFile,username,apikey):
   df['the_geom'] = df['geofence'].map(reorderLatLng)
   df = df.rename(columns=lambda x: x.replace('latitude', 'centroid_latitude').replace('longitude', 'centroid_longitude'))
   curTime = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-  ouFile = 'data/temp/ninth_decimal_example'+'_'+curTime+'.csv'
+  ouFile = 'data/temp/ninth_decimal_'+'_'+curTime+'.csv'
 
   df.to_csv(ouFile,index=False)
   cl = CartoDBAPIKey(apikey, username)
