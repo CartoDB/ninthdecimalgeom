@@ -7,6 +7,9 @@ This tool is for repairing Ninth Decimal geometries that were created with a web
 ### Testing:
 You can test this application with this data: [https://github.com/CartoDB/ninthdecimalgeom/blob/master/data/example.csv](https://github.com/CartoDB/ninthdecimalgeom/blob/master/data/example.csv)
 
+![img/screenshot.png](img/screenshot.png)
+
+
 <!--Assuming there is a .carto file called `my_carto_file.carto` that came as the result of exporting a visualization with (at least) one layer that came from dataset `customers` and another layer that came from a `providers` dataset, you can replace those datasets with `customers_new` and `providers_new` as follows:
 
 ```python
