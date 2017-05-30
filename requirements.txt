@@ -4,6 +4,8 @@ ipython==5.1.0
 Flask-WTF==0.13.1
 gunicorn==19.6.0
 honcho==0.7.1
-pandas
+six==1.10.0
+numpy==1.10.2
+pandas==0.18.0
 -e git+git://github.com/CartoDB/cartodb-python.git#egg=cartodb
 requests_oauthlib
