@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import ConfigParser
 import os
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_wtf.csrf import CsrfProtect
@@ -61,6 +62,8 @@ def index():
 
         importer = cleanNinthDecimal(form.ninth_decimal_csv.data.stream, form.carto_api_endpoint.data, form.carto_api_key.data)
 
+
+        #.stream
         # new_dataset_names = form.new_dataset_names.data.split(",")
         # for i, old_dataset_name in enumerate(form.old_dataset_names.data.split(",")):
         #     dotcarto_file.replace_dataset(old_dataset_name, new_dataset_names[i])
@@ -68,3 +71,6 @@ def index():
         #return send_file(dotcarto_file.get_new(), attachment_filename=filename, as_attachment=True)
         #return 'test'
     return render_template("index.html", form=form, result=[str(importer)])
+
+
+app.run()
