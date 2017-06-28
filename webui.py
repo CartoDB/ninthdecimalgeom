@@ -12,6 +12,7 @@ from wtforms.validators import DataRequired
 # from dotcarto import DotCartoFile
 from geom import cleanNinthDecimal
 
+
 class Config(object):
     """
     Looks for config options in a config file or as an environment variable
@@ -48,8 +49,7 @@ CsrfProtect(app)
 class DotCartoForm(FlaskForm):
     carto_api_endpoint = StringField("CARTO API endpoint", validators=[DataRequired()], description="For carto.com cloud accounts: https://YOUR_USER_NAME.carto.com/api/")
     carto_api_key = StringField("CARTO API key", validators=[DataRequired()], description='Found on the "Your API keys" section of your user profile')
-    ninth_decimal_csv = FileField("Upload .csv file", validators=[FileRequired(), FileAllowed(["csv"], ".csv files only!")],
-                                       description=".csv to be assigned a WKT geometry field")
+    ninth_decimal_csv = FileField("Upload .csv file", validators=[FileRequired(), FileAllowed(["csv"], ".csv files only!")], description=".csv to be assigned a WKT geometry field")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -58,19 +58,9 @@ def index():
     importer = None
     if form.validate_on_submit():
 
-        filename = secure_filename(form.ninth_decimal_csv.data.filename)
+        importer = cleanNinthDecimal(form.ninth_decimal_csv.data.stream, form.ninth_decimal_csv.data.filename, form.carto_api_endpoint.data, form.carto_api_key.data)
 
-        importer = cleanNinthDecimal(form.ninth_decimal_csv.data.stream, form.carto_api_endpoint.data, form.carto_api_key.data)
-
-
-        #.stream
-        # new_dataset_names = form.new_dataset_names.data.split(",")
-        # for i, old_dataset_name in enumerate(form.old_dataset_names.data.split(",")):
-        #     dotcarto_file.replace_dataset(old_dataset_name, new_dataset_names[i])
-
-        #return send_file(dotcarto_file.get_new(), attachment_filename=filename, as_attachment=True)
-        #return 'test'
     return render_template("index.html", form=form, result=[str(importer)])
 
 
-#app.run()
+# app.run()

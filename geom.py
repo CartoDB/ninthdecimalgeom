@@ -1,73 +1,56 @@
-from cartodb import CartoDBAPIKey, CartoDBException, FileImport
-#import pandas as pd #remove pandas b/c dokku doesn't seem to support numpy's C dependencies
+from cartodb import CartoDBAPIKey, FileImport  # CartoDBException, FileImport
+# import pandas as pd #remove pandas b/c dokku doesn't seem to support numpy's C dependencies
 import csv
 from datetime import datetime
 from io import TextIOWrapper
-import StringIO
+# import StringIO
+# import os
+# from requests import request
+# from flask import render_template   # Flask, send_file, render_template
 
-def add(cartojson='',first='',second=''):
-    print(' input file from form ',  request.form.get("cartojson"))
-    print(' input file from userame  ',  request.form.get("userName"))
-    if cartojson == '':
-        cartojson = request.form.get("cartojson")
-    if first == '':
-        first = request.form.get("userName")
-    if second == '':
-        second = request.form.get("apiKey")
 
-    print cartojson
-    filepath = os.path.join(os.path.dirname(__file__)+'/data/input',cartojson)
-    print filepath
-    open_read = open(filepath,'r')
-
-    result = cleanNinthDecimal(open_read,first,second)
-    return render_template("index.html",result=result)
-
-def reorderLatLng(inValue): 
+def reorderLatLng(inValue):
     listCoords = []
     for i in inValue.split(','):
-        i = i.replace('((','').replace('))','').replace('POLYGON','')
+        i = i.replace('((', '').replace('))', '').replace('POLYGON', '')
         i = i.split(' ')
-        inPair = i[1].replace("'",'')+' '+i[0].replace("'",'')
+        inPair = i[1].replace("'", '')+' '+i[0].replace("'", '')
         listCoords.append(inPair)
-    print 'listCoords:',listCoords
+    print 'listCoords:', listCoords
     return "POLYGON(("+','.join(listCoords)+"))"
 
-def cleanNinthDecimal(inFile,username,apikey):
+
+def cleanNinthDecimal(inFile, inFileName, username, apikey):
     curTime = datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+    ouFileName = inFileName.replace('.csv', '')
     ouFile = 'data/ninth_decimal_'+curTime+'.csv'
-    
-    #with open(inFile) as csvinput:
-    # x = []
-    # for i in csvinput:
-    #     x.append(i)
-    #import pdb
-    #pdb.set_trace()
+    ouFile = 'data/_send/'+ouFileName+'.csv'
+
     with open(ouFile, 'w') as csvoutput:
         writer = csv.writer(csvoutput, lineterminator='\n')
 
         # This code opens our bytestream with \r as the newline
-        newline_wrapper = TextIOWrapper(inFile, newline='\r')
+        newline_wrapper = TextIOWrapper(inFile, newline=None)  # newline='\r')
 
-        reader = csv.reader(newline_wrapper) #, delimiter = ',')#, lineterminator='\r')
+        reader = csv.reader(newline_wrapper)  # , delimiter = ',')#, lineterminator='\r')
 
         all = []
         row = next(reader)
-        row[7] = 'centroid_latitude'
-        row[8] = 'centroid_longitude'
+
         row.append('the_geom')
         all.append(row)
 
+        geoFenceColLoc = row.index('geofence')
+
         for row in reader:
-            row.append(reorderLatLng(row[11]))
+            row.append(reorderLatLng(row[geoFenceColLoc]))
             all.append(row)
 
         writer.writerows(all)
 
-    
     cl = CartoDBAPIKey(apikey, username)
-  
-    #Import csv file, set privacy as 'link' and create a default viz
-    fi = FileImport(ouFile, cl, create_vis='false', privacy='link')
+
+    # Import csv file, set privacy as 'link' and create a default viz
+    fi = FileImport(ouFile, cl, create_vis='false', privacy='link', content_guessing='false', type_guessing='false')
     fi.run()
     return fi
