@@ -47,7 +47,7 @@ CsrfProtect(app)
 
 
 class DotCartoForm(FlaskForm):
-    carto_api_endpoint = StringField("CARTO API endpoint", validators=[DataRequired()], description="For carto.com cloud accounts: https://YOUR_USER_NAME.carto.com/api/")
+    carto_api_endpoint = StringField("CARTO Username", validators=[DataRequired()], description="Your CARTO username.")
     carto_api_key = StringField("CARTO API key", validators=[DataRequired()], description='Found on the "Your API keys" section of your user profile')
     ninth_decimal_csv = FileField("Upload .csv file", validators=[FileRequired(), FileAllowed(["csv"], ".csv files only!")], description=".csv to be assigned a WKT geometry field")
 
